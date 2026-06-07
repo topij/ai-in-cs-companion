@@ -31,7 +31,8 @@ cs-toolkit/
 │   ├── credentials/         # Single dotenv loader with format validation
 │   ├── intercom-utils/      # Intercom API client
 │   ├── postmark-utils/      # Email engagement stats
-│   ├── in-parallel-utils/   # In Parallel MCP client
+│   ├── in-parallel-utils/   # In Parallel MCP client (direct bearer-auth, for scheduled runs)
+│   ├── linear-client/       # Direct Linear GraphQL client (for scheduled runs)
 │   └── cs-server/           # MCP + REST server exposing toolkit content to colleagues
 ├── packs/                   # Pack content — read by the substrate at runtime
 │   └── voice/               # Customer-voice pack: schemas, prompts, taxonomy
@@ -41,7 +42,7 @@ cs-toolkit/
 │   └── support-docs/        # KB articles, guides, screenshots, Intercom sync
 ├── scripts/                 # Orchestration (snapshot, automations, recovery)
 ├── state/                   # Shared cache and history (gitignored where it carries PII)
-├── .claude/commands/        # Cross-domain skills (~50 of them)
+├── .claude/commands/        # Skills (cross-domain + per-domain, ~100 total)
 └── config/                  # sources.yaml, customers.yaml, automations.yaml, …
 ```
 
@@ -117,28 +118,30 @@ The principle: don't trust the AI's prose. Validate the structured data with rul
 
 ## Integrations
 
-**MCP, via In Parallel and others.** Meetings and signals come through the In Parallel MCP. Gmail, Slack, Linear, and the CRM each have their own MCP servers for interactive use. The snapshot pipeline uses direct API calls instead, because cron-side work is better off without an interactive session in the loop.
+**MCP, via In Parallel and others.** Meetings and signals come through the In Parallel MCP. Gmail, Slack, Linear, and the CRM each have their own MCP servers for interactive use. The scheduled snapshot pipeline uses direct API calls instead, since unattended runs are better off without an interactive session in the loop.
+
+**cs-server — internal access for colleagues.** The toolkit exposes its own data through a `cs-server` with an MCP interface and a REST API. This is how the customer signal stops being one operator's private output: a colleague in product, sales, or engineering can query the same reports, observations, and health views from their own AI tools — without going through the person who runs the toolkit. It's the bridge from a personal toolkit to genuinely shared context.
 
 **Slack review loops.** Skills that produce material humans must review (release notes, customer health summaries, weekly QA verdicts) post to a review channel and wait. A separate Slack bot watches reactions and either advances the pipeline (👍) or sends the draft back for revision (👎).
 
-**Google Workspace.** Drive for report sync, Sheets for the dashboard, Gmail for outbound customer email. Cron paths use a service account with domain-wide delegation; interactive skills use the user's session.
+**Google Workspace.** Drive for report sync, Sheets for the dashboard, Gmail for outbound customer email. Unattended runs authenticate with a service account; interactive skills use the user's own session.
 
 **Output channels.** Slack (`#product`, `#customer-success`), a Google Drive folder, an office kiosk display, customer email via Postmark, Intercom Messenger News for release notes.
 
 ## Automation
 
-About forty scheduled jobs run via macOS LaunchAgents on a laptop kept deliberately powered on. The schedule has dependency-aware waits — downstream jobs poll for upstream completion instead of silently skipping when the upstream runs a little late.
+About forty scheduled jobs run on a recurring schedule — wherever the toolkit is hosted, whether that's a developer machine or an internal server. The schedule has dependency-aware waits — downstream jobs poll for upstream completion instead of silently skipping when the upstream runs a little late.
 
-The cron jobs commit to a dedicated `auto/daily` branch. Once a week, a Friday job opens a pull request merging that branch into `main`, which gets reviewed and merged by a human. This separates *machine wrote this* from *I read it and approved it*, and gives the toolkit a real reviewable history.
+Machine-generated work is kept separate from human-approved work: scheduled runs write to a staging area that a human reviews and promotes on a regular cadence. This separates *machine wrote this* from *I read it and approved it*, and gives the toolkit a real reviewable history.
 
-A daily drift-checker compares the auto-committed work to the main branch and surfaces anything that needs attention.
+A regular drift-checker compares the auto-generated work to the approved baseline and surfaces anything that needs attention.
 
 ## What level five is for
 
 Levels one through four (in the companion Medium post) cover the patterns most teams need: chat with AI, connect MCPs, write skills, schedule them. Level five — a toolkit like this one — earns itself when:
 
 - You need schemas and contracts. Downstream tools consume structured data, not parsed prose.
-- You need to evaluate AI output systematically. An eval harness scores faithfulness, categorisation accuracy, source attribution coverage.
+- You need to evaluate AI output systematically. An eval harness scores faithfulness, categorisation accuracy, quote attribution, and quote tiering.
 - You have multi-step pipelines with branching that scheduled tasks can't express cleanly.
 - You're connecting AI work into other teams' systems (product, comms, engineering) in ways that need auditability.
 - You're running this often enough that "it broke" needs a recovery story, not a manual restart.
