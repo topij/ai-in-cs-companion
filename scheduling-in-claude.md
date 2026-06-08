@@ -21,6 +21,34 @@ The phrasing is natural — anything you'd say to a colleague works:
 - *"In an hour, remind me to send the follow-up email I drafted to Acme."*
 - *"On the first of every month, run a 'customers gone quiet' check across the book and flag anyone with no signal in the last 30 days."*
 
+## Before you rely on it — operational notes
+
+Built-in scheduling is genuinely no-code, but a few things will surprise you the
+first time. None are bugs; knowing them up front saves a confused morning.
+
+- **The app has to be running.** Scheduled tasks fire while the app is open. If the
+  app is closed when a task is due, it runs on next launch instead of being skipped.
+  So a "missed" 8:30am run usually means the app was closed, not that the task broke.
+
+- **Run it once manually to pre-approve its tools.** The first run pauses to ask for
+  permission on each connector it touches (your meeting platform, Gmail, Slack…). An
+  unattended 8:30am run can't answer that prompt. Hit "Run now" once, approve the
+  tools, and future runs go through without stalling.
+
+- **The exact minute drifts a little.** An 8:30 schedule may show and fire around
+  08:37. This jitter is deliberate (it spreads load); don't set tight back-to-back
+  schedules expecting to-the-second timing.
+
+- **For Slack (or any channel target), use the real channel — and its ID.** The
+  channel name in an example prompt is just an example; your workspace may not have a
+  `#customer-success` channel at all. Point the task at whatever your CS channel is
+  actually called, and give the scheduled prompt the channel's *ID*, not just its
+  name — a fresh scheduled run has no chat history to disambiguate a name from.
+
+- **Drafts beat sends for anything outbound.** For a scheduled task that posts to
+  Slack or email, prefer "create a draft" over "send" so a human still eyes it. See
+  Human-in-the-loop below.
+
 ## A few CS workflows worth scheduling
 
 | Schedule | Workflow | Notes |

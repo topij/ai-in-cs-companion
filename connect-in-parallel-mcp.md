@@ -81,9 +81,19 @@ Find every meeting in the last two weeks where someone raised a concern about [t
 
 ## If it doesn't work
 
+- **The connection errors while you're adding it.** This is a *connect-time* failure
+  — distinct from the ones below, which all assume an already-configured server. If
+  the add/sign-in step itself fails (an OAuth consent screen that errors, a login via
+  your identity provider that won't complete, a "couldn't connect" on save), check:
+  the server URL/host is exactly right (no trailing path or typo); the
+  redirect/callback completes (some browsers or pop-up blockers interrupt it — try
+  the in-app connector flow or a different browser); and the account you're signing in
+  with actually has access to the workspace. If it persists, it's an auth/registration
+  issue on the server side rather than your config — check In Parallel's docs or ask
+  their support.
 - **Claude doesn't see the In Parallel tools.** You probably need a full restart, not just reopen. Quit Claude completely and relaunch.
 - **Auth errors.** The token may have expired or been revoked. Generate a new one from In Parallel settings.
-- **Empty results.** Confirm the token belongs to the workspace that contains the meetings you're asking about. Tokens are workspace-scoped by default.
+- **Empty results.** Confirm the token belongs to the workspace that contains the meetings you're asking about. Tokens are workspace-scoped by default — and remember a meeting is only visible once it's been published to a workspace the token can reach.
 - **Anything else.** Open In Parallel's support docs or message their support — MCP setup specifics evolve faster than a snapshot document like this one.
 
 For production setups — scheduled jobs, shared team access, audit requirements — see [`mcp-advanced-auth.md`](mcp-advanced-auth.md).

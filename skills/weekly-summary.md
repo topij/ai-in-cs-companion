@@ -31,7 +31,7 @@ Keep descriptions concrete and specific — strip implementation detail and inte
 
 ## Tips
 
-- This is the prompt you'd run on Friday afternoon to have the team's Monday briefing ready. If you connect Slack via MCP, you can extend the prompt: *"…and post the result as a draft message to #customer-success."*
+- This is the prompt you'd run on Friday afternoon to have the team's Monday briefing ready. If you connect Slack via MCP, you can extend the prompt: *"…and post the result as a **draft** message to my CS channel."* Use *draft*, not send, so a human still reviews it before it goes out. And point it at whatever your CS channel is actually called — `#customer-success` here is just a placeholder; your workspace may name it something else entirely. For a scheduled version, give the channel's ID rather than its name (see [`../scheduling-in-claude.md`](../scheduling-in-claude.md)).
 
 - The summary is intentionally derived from the customer-voice scan, not regenerated from raw transcripts each time. If you want fresh signal, run customer-voice first.
 
