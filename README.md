@@ -2,6 +2,13 @@
 
 A snapshot of examples accompanying the Medium piece *"The Five Levels of AI in Customer Success"* by Topi Järvinen.
 
+**Read the articles**
+
+- Medium — *The Five Levels of AI in Customer Success*: `REPLACE WITH MEDIUM URL`
+- LinkedIn — *(companion post)*: `REPLACE WITH LINKEDIN URL`
+
+> Replace the two `REPLACE WITH …` placeholders above with the live article links once they're published.
+
 This repo is a frozen snapshot — not actively maintained — to illustrate the patterns described in the post. Adapt freely.
 
 ## What's here
