@@ -28,7 +28,7 @@ If you haven't read the post: Level 1 is chatting with ChatGPT or Claude about a
 
 `customer-success-prompts.md` (level 1) — practical paste-and-ask prompts for common CS jobs: extracting commitments, drafting follow-ups, finding the concern beneath the request, spotting tone shifts.
 
-`connect-in-parallel-mcp.md` (level 2) — Claude Desktop and ChatGPT setup for the In Parallel MCP server. URLs and token-retrieval paths are illustrative; check In Parallel's authoritative docs for the current values.
+`connect-in-parallel-mcp.md` (level 2) — Claude, ChatGPT, and Cursor setup for the In Parallel MCP server via the OAuth connector flow (no token or config file to edit). Based on In Parallel's [official connect guide](https://support.in-parallel.com/en/articles/691255-connect-your-ai-tool-to-in-parallel), which has the click-by-click steps with screenshots.
 
 `skills/customer-voice.md` and `skills/weekly-summary.md` (level 3) — no-code "skills." Long prompts you can paste into a new Claude chat, save as a Claude Project's custom instructions, or run on a schedule. The customer-voice skill scans every customer's recent signal; the weekly-summary skill produces the team digest.
 

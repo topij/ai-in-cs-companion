@@ -1,8 +1,8 @@
 # MCP Authentication — Bearer Tokens and OAuth
 
-The level-two setup in [`connect-in-parallel-mcp.md`](connect-in-parallel-mcp.md) uses a personal bearer token — fast to set up, fine for development and single-user automation. At level five, when you're running scheduled jobs across a team, building a shared toolkit, or exposing the connection through your own systems, you'll want more than a single static token.
+The level-two setup in [`connect-in-parallel-mcp.md`](connect-in-parallel-mcp.md) uses the **OAuth** connector flow — you authorize in a consent screen, pick which Workspaces to share, and never handle a token by hand. That's the right default for interactive use. The alternative is an **API key** (a long-lived bearer token), which In Parallel issues on request for headless or scheduled use where an interactive OAuth handshake can't run. At level five — scheduled jobs across a team, a shared toolkit, exposing the connection through your own systems — you'll want to think carefully about which of these you're using and how you rotate it.
 
-This document covers both options for connecting to the In Parallel MCP at production grade: long-lived **bearer tokens** (with rotation and scoping), and **OAuth** (with delegated access and refresh).
+This document covers both options for connecting to the In Parallel MCP at production grade: long-lived **bearer tokens / API keys** (with rotation and scoping), and **OAuth** (with delegated access and refresh).
 
 > **Note on placeholders.** Specific URLs, scope names, and registration flows below are illustrative. Check In Parallel's authoritative auth documentation for current details. The shape and the trade-offs are what matters here.
 
@@ -22,7 +22,7 @@ The same kind of token used at level two — long-lived, attached to a workspace
 - Anything customer-facing where access should be revocable per-user
 - Anything where the token could end up in a place you don't fully control
 
-**Setup.** Generate the token from In Parallel settings (Settings → Developer → MCP tokens — confirm the path in In Parallel's docs). Give it a descriptive name so you can recognise it later: `cs-toolkit-cron-2026`, not `token-1`.
+**Setup.** You don't self-generate an In Parallel API key — **request one from your In Parallel customer success manager**, telling them which AI client or system it's for. (See the [support article](https://support.in-parallel.com/en/articles/691255-connect-your-ai-tool-to-in-parallel) — API keys are the path for "headless agents, CI runners, or restricted environments" where OAuth can't complete.) When you receive it, give it a descriptive local name so you can recognise it later: `cs-toolkit-cron-2026`, not `token-1`.
 
 Store the token somewhere that isn't your repo. Two patterns that work:
 
@@ -51,7 +51,7 @@ import os
 token = os.environ["IN_PARALLEL_MCP_TOKEN"]
 
 with httpx.Client(
-    base_url="https://mcp.in-parallel.com",     # placeholder
+    base_url="https://www.in-parallel.ai/mcp",  # MCP connector URL; REST path below is illustrative
     headers={"Authorization": f"Bearer {token}"},
     timeout=30.0,
 ) as client:
@@ -125,7 +125,7 @@ token = client.fetch_token(
 
 # 3. Use the token to call the MCP
 response = client.get(
-    "https://mcp.in-parallel.com/meetings/search",   # placeholder
+    "https://www.in-parallel.ai/mcp/meetings/search",  # MCP URL; REST path illustrative
     params={"customer": "acme"},
 )
 ```
