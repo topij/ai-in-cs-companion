@@ -2,7 +2,7 @@
 
 Paste-and-ask prompts for ChatGPT, Claude, or any chat AI. Each one is built for a specific job — copy the prompt, paste the transcript or email thread above or below it, and you'll get usefully structured output.
 
-These are deliberately simple. Level 1 in the companion post is the floor, not the ceiling. The point: even at this level — no integrations, no skills, no scheduling — you can get real work done.
+These are deliberately simple. Level 1 in the Medium piece is the floor, not the ceiling. The point: even at this level — no integrations, no skills, no scheduling — you can get real work done.
 
 ## After a customer meeting
 

@@ -1,6 +1,8 @@
 # cs-toolkit — Architectural Overview
 
-A simplified structural overview of cs-toolkit, the production Customer Success toolkit referenced in the Medium post's Level 5 section. The source is private; this document describes the shape so others can build something similar.
+A simplified structural overview of cs-toolkit, the production Customer Success toolkit referenced in the Medium post's Level 5 section.
+
+The source is private — not out of secrecy about the approach, but because the repo is dense with company-specific tweaks (our customers, our channels, our naming, our org's review habits) that would be noise to anyone else. What transfers is the approach. This document describes the shape, and — more usefully — the aspects that proved important to get right, so you can build something similar for your own context.
 
 ## Purpose
 
@@ -89,7 +91,7 @@ Single fan-in (the snapshot), single shared cache, many downstream skills consum
 
 ## Key concepts
 
-**Signals vs observations.** In Parallel produces *signals* — nine structured types per meeting (decisions, action items, risks, dependencies, escalations, opportunities, learnings, progress updates, obstacles). The customer-voice domain reads those signals, joins them with email and ticket data, and derives *observations* — categorised by type (need, problem, praise, decision), each backed by a verbatim quote. Signals are In Parallel's vocabulary; observations are the toolkit's customer-voice layer built on top.
+**Observations and enrichment.** In Parallel does the heavy lifting: it maintains shared context across every meeting and makes detailed, intelligent observations grounded in that context — surfaced as nine signal types (decisions, action items, risks, dependencies, escalations, opportunities, learnings, progress updates, obstacles), with action items attributed to the people who own them. The customer-voice domain doesn't re-derive that intelligence. It *enriches* it with a CS-specific lens: re-categorising into the types CS cares about (need, problem, praise, decision), joining with email and ticket data, backing each item with a verbatim quote, and adding its own observations where the CS lens catches something a general-purpose pass wasn't looking for — drawn both from In Parallel's observations and from the raw transcripts. The division of labour: In Parallel observes; the toolkit specialises.
 
 **The Parallel Context Graph.** The structured record In Parallel maintains from every meeting your team runs. Exposed to the toolkit via In Parallel's MCP server. The toolkit reads from the graph; it doesn't try to recreate or duplicate it.
 
@@ -135,6 +137,24 @@ About forty scheduled jobs run on a recurring schedule — wherever the toolkit 
 Machine-generated work is kept separate from human-approved work: scheduled runs write to a staging area that a human reviews and promotes on a regular cadence. This separates *machine wrote this* from *I read it and approved it*, and gives the toolkit a real reviewable history.
 
 A regular drift-checker compares the auto-generated work to the approved baseline and surfaces anything that needs attention.
+
+## What proved important to get right
+
+The structure above is the easy part. These are the lessons that took months of production runs to learn — the ones worth stealing even if your architecture looks nothing like this.
+
+**Never let the model keep its own books.** Early on, the per-customer reports carried LLM-written counts ("12 threads reviewed, 8 observations extracted"). They were wrong in both directions — sometimes inflated, sometimes zero while the same run demonstrably wrote a dozen new observations. Every count, status summary, and "what changed this run" field is now recomputed deterministically from the structured data at write time, overwriting whatever the model claimed. The model produces content; code produces bookkeeping.
+
+**Enforce deterministically what the LLM applies inconsistently.** Skill prompts contain rules ("demote an open problem when the linked ticket is done"). On scheduled, unattended runs, the model skips some of them — reliably enough that you can measure it. Any rule that doesn't need the run's raw conversational context is re-applied by a plain Python script after the skill finishes, and a schema verifier fails the run if the rule visibly wasn't applied. Prompt rules are a request; post-run scripts are a guarantee.
+
+**Stamp provenance on every artifact.** Each published report carries a run manifest: which code version wrote it, from which data snapshot, when. Paired with a small "deploy status" tool, this turns the most common operational question — *was the fix live for the run that produced this artifact?* — into a query instead of an afternoon of forensics across git logs and cron timestamps.
+
+**Build decay in.** An observation nobody reinforces should age out on its own — first downgraded to context, eventually archived — with the reason stamped on it. Without this, the system slowly fills with stale findings that read as current, and trust erodes precisely because nothing ever looks wrong.
+
+**Weight evidence by who said it.** A first-person statement from an active user is not the same signal as an exec sponsor's secondhand summary, or an internal teammate's impression. Every observation carries an evidence class derived from who spoke, and only verifiable first-person customer voice qualifies for the cross-customer surfaces that product and leadership read. Per-customer reports keep everything for audit.
+
+**Recovery beats rerun.** When a scheduled run dies mid-write, the instinct is to rerun it — but a full LLM cycle is the most expensive operation in the system. Most failures have cheaper shapes: patch a stale report deterministically from the source of truth, or replay the file-writes from the dead session's log. Having these procedures written down before the first 7am failure is the difference between a three-minute fix and a lost morning.
+
+**Separate machine-written from human-approved.** Scheduled runs commit to a staging branch that a human reviews and merges on a regular cadence; guards on both the writer and a drift-detector keep the boundary honest. The audit trail "the machine wrote this, I approved it" turns out to matter as much as the content.
 
 ## What level five is for
 

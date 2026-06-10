@@ -71,7 +71,13 @@ For each active customer in `config/customers.yaml`:
 - ...
 ```
 
-The cs-toolkit's real skill files follow this format with much more detail — typically 100–300 lines, with explicit references to schema files, output file paths, and helper Python modules in `libs/`.
+The cs-toolkit's real skill files follow this format with much more detail — from a hundred lines to several hundred for the big pipelines, with explicit references to schema files, output file paths, and helper Python modules in `libs/`.
+
+Three production-proven patterns worth copying once your skills run unattended:
+
+- **An autonomy banner.** A skill run by cron via `claude -p` must say so explicitly at the top: *"Proceed autonomously — do not ask for confirmation. Stop only if [the two or three genuinely fatal conditions]."* An unattended run that pauses to ask a question exits silently with no work done, and the scheduler records a false success.
+- **Orchestrator + isolated subagents.** The production customer-voice skill is an orchestrator that runs one subagent per customer, each seeing exactly one customer's data. Cross-customer contamination — customer A's quote landing in customer B's report — becomes structurally impossible rather than something you hope the model avoids.
+- **Phase splits for crash isolation.** Long pipelines are splittable by a `mode:` parameter (e.g. `gather` writes per-customer files, a separate `rollup` run reads whatever landed on disk). A crash mid-gather then costs one customer's report, not the whole run.
 
 ## Why this format
 

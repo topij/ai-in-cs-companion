@@ -3,7 +3,7 @@
 The single step from level one to level two: give your AI its own access to your data
 instead of copy-pasting it. In Parallel exposes its meetings, goals, decisions, action
 items, and Workspaces — plus a few actions — over the **Model Context Protocol (MCP)**,
-the open standard AI clients use to talk to external tools. You connect once, authorize
+the open standard AI clients use to talk to external tools. You connect once, authorise
 in an **OAuth** consent screen, and from then on your AI assistant can read and act on
 your In Parallel data directly from a chat.
 
@@ -16,7 +16,7 @@ your In Parallel data directly from a chat.
 ## What you need
 
 - An **In Parallel account**.
-- A supported AI client: **Claude**, **ChatGPT**, or **Cursor**. (GitHub Copilot is coming next.)
+- A supported AI client: **Claude**, **ChatGPT**, or **Microsoft 365 Copilot**. (Claude and ChatGPT setup is covered below; Microsoft 365 Copilot involves your organisation's IT — ask In Parallel for guidance.)
 - The connector URL: **`https://www.in-parallel.ai/mcp`** — you point your client at this address.
 
 There's no JSON config to edit and no token to paste for the standard setup. The
@@ -29,7 +29,7 @@ scheduled use — see "Prefer an API key?" below.)
 1. Open your account menu → **Settings**.
 2. Open **Connectors** in the left nav. Claude now keeps these under **Customize** — click through to **Customize → Connectors**.
 3. Find **In Parallel** under **Web** connectors and select it. If it isn't listed, use the **+** add icon and enter the MCP URL `https://www.in-parallel.ai/mcp`.
-4. Click **Connect**. In Parallel opens its connect page; click **Connect** there to start authorization.
+4. Click **Connect**. In Parallel opens its connect page; click **Connect** there to start authorisation.
 5. On the **OAuth consent** screen, choose what to share: **Full access** (all current *and future* Workspaces) or tick individual Workspaces. Click **Allow access** — you're redirected back to Claude.
 6. Review **Tool permissions**. Write and delete tools default to **Needs approval**; you can set any tool to **Needs approval**, **Blocked**, or **Custom**.
 7. In any chat, open the **+** menu → **Connectors** and toggle **In Parallel** on for that conversation.
@@ -44,13 +44,6 @@ In ChatGPT, In Parallel is a **custom app (MCP server)**, which lives under **De
 2. Under **Advanced settings**, click **Create app**. Fill in: **Name** *In Parallel*, **MCP Server URL** `https://www.in-parallel.ai/mcp`, **Authentication** **OAuth**. Acknowledge the custom-MCP risk warning and click **Create**.
 3. Complete the same In Parallel **OAuth consent** (choose Workspaces → **Allow access**).
 4. In the composer, open **+** → **More** → **In Parallel** to enable it. The chat runs in **Developer mode** (memory is off for that chat).
-
-## Cursor
-
-Add In Parallel as an MCP server in Cursor's settings using the same URL,
-`https://www.in-parallel.ai/mcp`, and complete the OAuth consent step (choose
-Workspaces → **Allow access**). Cursor's MCP config location moves around as the client
-evolves — follow Cursor's own MCP setup docs for where the server config lives.
 
 ## Other Claude products
 
@@ -95,9 +88,9 @@ for everything else it connects to.
 
 ## If it doesn't work
 
-- **The OAuth step won't complete while you're adding it.** This is a *connect-time* failure — distinct from the ones below, which assume an already-connected server. If the consent screen errors, the sign-in won't finish, or you never get redirected back to your client, check: the URL is exactly `https://www.in-parallel.ai/mcp` (no typo or trailing path); a pop-up blocker or browser isn't interrupting the redirect (try again, or a different browser); and the account you're authorizing with has access to the Workspaces you expect. If it persists, it's likely server-side rather than your config — check the support article or ask In Parallel support. (For environments where OAuth simply can't run, use the API-key path above.)
+- **The OAuth step won't complete while you're adding it.** This is a *connect-time* failure — distinct from the ones below, which assume an already-connected server. If the consent screen errors, the sign-in won't finish, or you never get redirected back to your client, check: the URL is exactly `https://www.in-parallel.ai/mcp` (no typo or trailing path); a pop-up blocker or browser isn't interrupting the redirect (try again, or a different browser); and the account you're authorising with has access to the Workspaces you expect. If it persists, it's likely server-side rather than your config — check the support article or ask In Parallel support. (For environments where OAuth simply can't run, use the API-key path above.)
 - **Claude doesn't see the In Parallel tools.** Make sure the connector is toggled on in the chat (**+** → **Connectors**). A full restart of the client can help if it was just connected.
-- **Empty results.** Confirm you granted the consent screen access to the right Workspaces — and remember a meeting is only visible once it's been **published to a Workspace** you shared. A freshly-recorded meeting in an unshared or goal-less Workspace won't show up until it's published.
+- **Empty results.** Confirm you granted the consent screen access to the right Workspaces — and remember a meeting is only visible once it's been **published to a Workspace** you shared. A freshly-recorded meeting in an unshared or goal-less Workspace won't show up until it's published. This scoping is deliberate: in In Parallel the workspace is the unit of trust — each connection sees exactly what it was granted, nothing more. The feature is doing its job; verifying reach is yours.
 - **Anything else.** The support article is kept more current than this snapshot: <https://support.in-parallel.com/en/articles/691255-connect-your-ai-tool-to-in-parallel>
 
 For production setups — scheduled jobs, shared team access, audit requirements — see [`mcp-advanced-auth.md`](mcp-advanced-auth.md).

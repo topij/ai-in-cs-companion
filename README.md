@@ -4,12 +4,13 @@ A snapshot of examples accompanying the Medium piece *"The Five Levels of AI in 
 
 **Read the articles**
 
-- Medium — *The Five Levels of AI in Customer Success*: `REPLACE WITH MEDIUM URL`
-- LinkedIn — *(companion post)*: `REPLACE WITH LINKEDIN URL`
 
-> Replace the two `REPLACE WITH …` placeholders above with the live article links once they're published.
+- Medium — *The Five Levels of AI in Customer Success* (the practical map this repo accompanies): `to-be released soon`
+- LinkedIn — *The CSM job didn't disappear. AI helped move it closer to real customer value.* (the companion essay): `to-be released soon`
 
 This repo is a frozen snapshot — not actively maintained — to illustrate the patterns described in the post. Adapt freely.
+
+The examples wear CS glasses, but the underlying pattern — shared context maintained by [In Parallel](https://www.in-parallel.com), reached by your AI over MCP — is general-purpose. Project management, team management, sales, and marketing benefit just as well, and most of these CS workflows repurpose for them with little more than a change of vocabulary: swap the customer list for a project list, "needs and problems" for "risks and blockers", and the same skills run.
 
 ## What's here
 
@@ -35,13 +36,13 @@ If you haven't read the post: Level 1 is chatting with ChatGPT or Claude about a
 
 `customer-success-prompts.md` (level 1) — practical paste-and-ask prompts for common CS jobs: extracting commitments, drafting follow-ups, finding the concern beneath the request, spotting tone shifts.
 
-`connect-in-parallel-mcp.md` (level 2) — Claude, ChatGPT, and Cursor setup for the In Parallel MCP server via the OAuth connector flow (no token or config file to edit). Based on In Parallel's [official connect guide](https://support.in-parallel.com/en/articles/691255-connect-your-ai-tool-to-in-parallel), which has the click-by-click steps with screenshots.
+`connect-in-parallel-mcp.md` (level 2) — Claude, ChatGPT, and Microsoft 365 Copilot setup for the In Parallel MCP server via the OAuth connector flow (no token or config file to edit). Based on In Parallel's [official connect guide](https://support.in-parallel.com/en/articles/691255-connect-your-ai-tool-to-in-parallel), which has the click-by-click steps with screenshots.
 
 `skills/customer-voice.md` and `skills/weekly-summary.md` (level 3) — no-code "skills." Long prompts you can paste into a new Claude chat, save as a Claude Project's custom instructions, or run on a schedule. The customer-voice skill scans every customer's recent signal; the weekly-summary skill produces the team digest.
 
 `scheduling-in-claude.md` (level 4) — how to use Claude's natural-language scheduling to run the skills above automatically. No cron, no YAML, just *"run this every Monday at 9am."*
 
-`cs-toolkit-architecture.md` (level 5) — a structural overview of the production toolkit referenced in the post. The toolkit's source is private; this document describes the shape so others can build something similar.
+`cs-toolkit-architecture.md` (level 5) — a structural overview of the production toolkit referenced in the post. The toolkit's source is private — it's dense with company-specific tweaks that wouldn't transfer — so this document outlines the approach instead, including the aspects that proved most important to get right when building something like it.
 
 `mcp-advanced-auth.md` (level 5) — bearer tokens and OAuth for the same MCP connection at production grade — when you're running scheduled jobs across a team, building a shared toolkit, or wiring the connection into your own systems.
 

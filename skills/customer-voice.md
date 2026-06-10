@@ -69,7 +69,7 @@ The two modes are the same skill; only the lookback and the framing change.
 
 - This isn't instant for many customers. If you have ten or more on your book, run it on a schedule overnight or early morning so the digest is waiting when you sit down. See [`../scheduling-in-claude.md`](../scheduling-in-claude.md).
 
-- A silently-incomplete scan is worse than a visibly-failed one. The most common cause is a meeting that exists but isn't published to a reachable workspace (see the coverage check in step 1). When in doubt, ask Claude *"which customers had no signal this week, and are you confident that's real and not a coverage gap?"*
+- A silently-incomplete scan is worse than a visibly-failed one. The most common cause is a meeting that exists but isn't published to a reachable workspace (see the coverage check in step 1). That scoping is by design — in In Parallel the workspace is the unit of trust, so a connection sees exactly what it was granted — which means verifying reach is part of running this skill, not a bug to report. When in doubt, ask Claude *"which customers had no signal this week, and are you confident that's real and not a coverage gap?"*
 
 - The output is a chat — you can ask follow-ups: *"tell me more about Customer X's third problem"*, or *"draft the renewal-conversation talking points for Customer Y"*, or *"which of these warrant escalation this week?"*
 
