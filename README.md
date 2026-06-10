@@ -5,8 +5,8 @@ A snapshot of examples accompanying the Medium piece *"The Five Levels of AI in 
 **Read the articles**
 
 
-- Medium — *The Five Levels of AI in Customer Success* (the practical map this repo accompanies): `to-be released soon`
-- LinkedIn — *The CSM job didn't disappear. AI helped move it closer to real customer value.* (the companion essay): `to-be released soon`
+- Medium — *The Five Levels of AI in Customer Success* (the practical map this repo accompanies): [READ](https://medium.com/@topij/the-five-levels-of-ai-in-customer-success-c118b6c37c07)
+- LinkedIn — *The CSM job didn't disappear. AI helped move it closer to real customer value.* (the companion essay): [READ](https://www.linkedin.com/pulse/csm-job-didnt-disappear-ai-helped-move-closer-real-value-j%C3%A4rvinen-c8y3c/)
 
 This repo is a frozen snapshot — not actively maintained — to illustrate the patterns described in the post. Adapt freely.
 
